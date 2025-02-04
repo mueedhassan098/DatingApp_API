@@ -1,4 +1,5 @@
-﻿using APIGateWay.Entities;
+﻿using APIGateWay.Controllers;
+using APIGateWay.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIGateWay.Data
@@ -7,7 +8,7 @@ namespace APIGateWay.Data
     {
         public DataContextClass(DbContextOptions options) : base(options)
         {
-
+            
         }
         
         public DbSet<App_User> Users { get; set; }

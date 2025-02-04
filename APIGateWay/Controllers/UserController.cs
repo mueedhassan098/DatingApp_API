@@ -1,13 +1,13 @@
 ﻿using APIGateWay.Data;
 using APIGateWay.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIGateWay.Controllers
 {
-    [ApiController]
-    [Route("api/[Controller]")] //Get API Users
-    public class UserController : ControllerBase
+    [Authorize]
+    public class UserController :BaseApiController //ControllerBase
     {
         private readonly DataContextClass _context;
 
@@ -15,6 +15,7 @@ namespace APIGateWay.Controllers
         {
             _context = context;
         }
+        [AllowAnonymous]
         [HttpGet]
         public async Task< ActionResult<IEnumerable<App_User>>> GetUsers()
         {

@@ -39,7 +39,7 @@ namespace APIGateWay.Controllers
             {
                 Username = user.UserName,
                 Token = tokenService.CreateToken(user)
-            };                                         
+            };
         }
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)

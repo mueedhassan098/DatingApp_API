@@ -1,5 +1,8 @@
 ﻿using APIGateWay.Data;
+using APIGateWay.Dtos;
 using APIGateWay.Entities;
+using APIGateWay.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,24 +12,26 @@ namespace APIGateWay.Controllers
     [Authorize]
     public class UserController :BaseApiController //ControllerBase
     {
-        private readonly DataContextClass _context;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserController(DataContextClass context)
-        {
-            _context = context;
+        public UserController(IUserRepository userRepository,IMapper mapper)
+        {           
+            this._userRepository = userRepository;
+            this._mapper = mapper;
         }
-        [AllowAnonymous]
+      //[AllowAnonymous]
         [HttpGet]
-        public async Task< ActionResult<IEnumerable<App_User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
-            var users =await _context.Users.ToListAsync();
-            return users;
+            var User=await _userRepository.GetMembersAsync();
+            return Ok(User);          
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<App_User>> GetUser(int id) 
+        [HttpGet("{username}")]
+        public async Task<ActionResult<MemberDto>> GetUser(string username) 
         {
-            var user =await _context.Users.FindAsync(id);
-            return user;
+          return await _userRepository.GetMemberAsync(username);
+           
         }
     }
 }

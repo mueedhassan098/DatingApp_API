@@ -44,13 +44,16 @@ namespace APIGateWay.Data
 
         public async Task<App_User> GetUserByNameAsync(string username)
         {
-           return await _context.Users.Include(p=>p.Photos) .SingleOrDefaultAsync(x => x.UserName == username);
+           return await _context.Users
+                .Include(p=>p.Photos)
+                .SingleOrDefaultAsync(x => x.UserName == username);
         }
 
-        public async Task<bool> SaveAllAsync(App_User user)
+        public async Task<bool> SaveAllAsync()
         {
-           return await _context.SaveChangesAsync()>0;
+            return await _context.SaveChangesAsync() > 0;
         }
+
 
         public void Update(App_User user)
         {

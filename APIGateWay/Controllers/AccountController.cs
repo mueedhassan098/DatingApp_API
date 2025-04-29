@@ -44,7 +44,9 @@ namespace APIGateWay.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await dataContextClass.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await dataContextClass.Users.Include(p=>p.Photos)
+                .FirstOrDefaultAsync(x =>
+            x.UserName == loginDto.Username);
             if (user == null)
             {
                 return Unauthorized("invalid Username");
@@ -61,7 +63,8 @@ namespace APIGateWay.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                PhotoUrl=user.Photos.FirstOrDefault(x=>x.IsMain)?.Url
             };
         }
         private async Task<bool> UserExists(string username)

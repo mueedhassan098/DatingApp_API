@@ -21,6 +21,7 @@ namespace APIGateWay.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySetting>(cofig.GetSection("CloudinarySetting"));
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<LogUserActivity>();
             return services;
         }
     }

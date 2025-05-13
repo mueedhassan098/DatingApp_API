@@ -2,6 +2,7 @@
 using APIGateWay.Dtos;
 using APIGateWay.Entities;
 using APIGateWay.Extensions;
+using APIGateWay.Helpers;
 using APIGateWay.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -24,12 +25,21 @@ namespace APIGateWay.Controllers
             this._mapper = mapper;
             this._photoService = photoService;
         }
-      //[AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams prams)
         {
-            var User=await _userRepository.GetMembersAsync();
-            return Ok(User);          
+           // var Users = await _userRepository.GetMembersAsync(prams);
+
+            var currentUser = await _userRepository.GetUserByNameAsync(User.GetUsername());
+            prams.CurrentUsername = currentUser.UserName;
+            if (string.IsNullOrEmpty(prams.Gender))
+            {
+                prams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+            var Users = await _userRepository.GetMembersAsync(prams);
+            Response.AddPaginationHeader(new PaginationHeader(Users.CurrentPage,
+                Users.PageSize, Users.TotalCount, Users.TotalPages));
+            return Ok(Users);
         }
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDto>> GetUser(string username) 

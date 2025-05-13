@@ -1,5 +1,6 @@
 ﻿using APIGateWay.Dtos;
 using APIGateWay.Entities;
+using APIGateWay.Helpers;
 
 namespace APIGateWay.Interfaces
 {
@@ -12,7 +13,9 @@ namespace APIGateWay.Interfaces
         Task<IEnumerable<App_User>> GetUserAsync();
         Task<App_User> GetUserByIdAsync(int id);
         Task<App_User> GetUserByNameAsync(string username);
-        Task<IEnumerable<MemberDto>> GetMembersAsync();
+        Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
+       // Task<IEnumerable<MemberDto>> GetMembersAsync();
+
         Task<MemberDto> GetMemberAsync(string username);
     }
 }

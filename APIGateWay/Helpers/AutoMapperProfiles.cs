@@ -14,9 +14,9 @@ namespace APIGateWay.Helpers
                 opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
             CreateMap<Photo, PhotoDto>();
-            CreateMap<MemberUpdateDto,App_User>();
-     //       CreateMap<MemberDto, App_User>()
-     //.ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<MemberUpdateDto, App_User>();
+            CreateMap<RegisterDto, App_User>();
         }
     }
 }

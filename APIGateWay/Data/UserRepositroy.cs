@@ -1,5 +1,6 @@
 ﻿using APIGateWay.Dtos;
 using APIGateWay.Entities;
+using APIGateWay.Helpers;
 using APIGateWay.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -26,12 +27,38 @@ namespace APIGateWay.Data
                 .SingleOrDefaultAsync();
                 
         }
+        //public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        //{
+        //    return await _context.Users
+        //        .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+        //        .ToListAsync();
+        //}
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            return await _context   .Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).ToListAsync();
-        }
+            //var query = _context.Users
+            //    .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+            //    .AsNoTracking();
+            var query = _context.Users.AsQueryable();
 
+            query = query.Where(u => u.UserName != userParams.CurrentUsername);
+            query = query.Where(u => u.Gender == userParams.Gender);
+
+            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+            var maxDob=DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+
+            query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+            query = userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(c => c.Created),
+                _ => query.OrderByDescending(l => l.LastActive),
+            };
+
+            return await PagedList<MemberDto>.CreateAsync(
+                query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider),
+                userParams.PageNumber,
+                userParams.PageSize );
+        }
         public async Task<IEnumerable<App_User>> GetUserAsync()
         {
             return await _context.Users.Include(p=>p.Photos).ToListAsync(); 

@@ -1,4 +1,4 @@
-﻿namespace APIGateWay.Helpers
+﻿ namespace APIGateWay.Helpers
 {
     public class PaginationHeader
     {

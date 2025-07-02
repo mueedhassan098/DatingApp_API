@@ -1,5 +1,6 @@
 ﻿using APIGateWay.Entities;
 using APIGateWay.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,11 +11,14 @@ namespace APIGateWay.Services
     public class TokenService : ITokenService
     {
         private readonly SymmetricSecurityKey _Key;
-        public TokenService(IConfiguration config)
+        private readonly UserManager<App_User> _userManager;
+
+        public TokenService(IConfiguration config,UserManager<App_User> userManager)
         {
-            _Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));  
+            _Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            this._userManager = userManager;
         }
-        public string CreateToken(App_User user)
+        public async Task<string> CreateToken(App_User user)
         {
             var claims = new List<Claim>
             {
@@ -22,7 +26,11 @@ namespace APIGateWay.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName,user.UserName)
 
             };
+            var roles = await _userManager.GetRolesAsync(user);
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
             var creds = new SigningCredentials(_Key, SecurityAlgorithms.HmacSha512Signature);
+
             var tokendescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

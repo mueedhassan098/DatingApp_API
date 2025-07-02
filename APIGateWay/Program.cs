@@ -1,6 +1,8 @@
 using APIGateWay.Data;
+using APIGateWay.Entities;
 using APIGateWay.Extensions;
 using APIGateWay.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +23,11 @@ var services=scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContextClass>();
+    var userManager = services.GetRequiredService<UserManager<App_User>>();
+    var roleManageer = services.GetRequiredService<RoleManager<AppRole>>();
+
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(context);
+    await Seed.SeedUsers(userManager, roleManageer);
 
 }
 catch(Exception ex)

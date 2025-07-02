@@ -1,4 +1,4 @@
-﻿using APIGateWay.Data;
+﻿    using APIGateWay.Data;
 using APIGateWay.Helpers;
 using APIGateWay.Interfaces;
 using APIGateWay.Services;
@@ -22,6 +22,8 @@ namespace APIGateWay.Extensions
             services.Configure<CloudinarySetting>(cofig.GetSection("CloudinarySetting"));
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
+            services.AddScoped<ILikesRepository, LikesRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             return services;
         }
     }

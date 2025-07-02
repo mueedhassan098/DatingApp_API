@@ -17,6 +17,11 @@ namespace APIGateWay.Helpers
 
             CreateMap<MemberUpdateDto, App_User>();
             CreateMap<RegisterDto, App_User>();
+            CreateMap<Message,MessageDto>()
+                .ForMember(MessageDto => MessageDto.SenderPhotoUrl,
+                opt => opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url))
+                .ForMember(MessageDto => MessageDto.RecipientPhotoUrl,
+                opt => opt.MapFrom(src => src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url));
         }
     }
 }

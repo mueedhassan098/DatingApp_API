@@ -25,6 +25,7 @@ namespace APIGateWay.Controllers
             this._mapper = mapper;
             this._photoService = photoService;
         }
+       // [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams prams)
         {
@@ -41,6 +42,7 @@ namespace APIGateWay.Controllers
                 Users.PageSize, Users.TotalCount, Users.TotalPages));
             return Ok(Users);
         }
+        //[Authorize(Roles ="Member")]
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDto>> GetUser(string username) 
         {

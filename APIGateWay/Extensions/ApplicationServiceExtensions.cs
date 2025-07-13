@@ -2,6 +2,7 @@
 using APIGateWay.Helpers;
 using APIGateWay.Interfaces;
 using APIGateWay.Services;
+using APIGateWay.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIGateWay.Extensions
@@ -24,6 +25,8 @@ namespace APIGateWay.Extensions
             services.AddScoped<LogUserActivity>();
             services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddSignalR();
+            services.AddSingleton<PresenceTracker>();
             return services;
         }
     }

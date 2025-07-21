@@ -1,6 +1,8 @@
 ﻿using APIGateWay.Entities;
 using APIGateWay.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,7 +25,8 @@ namespace APIGateWay.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId,user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName,user.UserName)
+                new Claim(JwtRegisteredClaimNames.UniqueName,user.UserName),
+                 new Claim(JwtRegisteredClaimNames.Name,user.UserName)
 
             };
             var roles = await _userManager.GetRolesAsync(user);
@@ -42,4 +45,5 @@ namespace APIGateWay.Services
             return tokenhandler.WriteToken(token); 
         }
     }
+   
 }

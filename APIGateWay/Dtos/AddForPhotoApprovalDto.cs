@@ -1,10 +1,11 @@
 ﻿namespace APIGateWay.Dtos
 {
-    public class PhotoDto
+    public class AddForPhotoApprovalDto
     {
         public int Id { get; set; }
+        public string Username { get; set; }
         public string Url { get; set; }
-        public bool IsMain { get; set; }
         public bool IsApproved { get; set; }
+        //public bool ApprovedBy { get; set; }
     }
 }

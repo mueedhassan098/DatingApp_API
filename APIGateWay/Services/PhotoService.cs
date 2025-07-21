@@ -42,7 +42,7 @@ namespace APIGateWay.Services
         //    return await _cloudinary.DestroyAsync(deleteParams);
         //}
 
-        public async Task<DeletionResult> Update_OR_Delete_PhotoAsync(string publicId)
+        public async Task<DeletionResult> DeletePhotoAsync(string publicId)
         {
             var deleteParams = new DeletionParams(publicId);
             return await _cloudinary.DestroyAsync(deleteParams);

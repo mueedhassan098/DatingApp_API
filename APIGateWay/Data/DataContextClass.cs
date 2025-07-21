@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace APIGateWay.Data
 {
@@ -13,8 +14,8 @@ namespace APIGateWay.Data
         {
             
         }
-        
-       // public DbSet<App_User> Users { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        //  public DbSet<App_User> Users { get; set; }
         public DbSet<UserLike> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
@@ -64,7 +65,9 @@ namespace APIGateWay.Data
                 .HasOne(u => u.Sender)
                 .WithMany(m => m.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
+            modelBuilder.ApplyUtcDateTimeConverter();
         }
     }
-    
+   
 }

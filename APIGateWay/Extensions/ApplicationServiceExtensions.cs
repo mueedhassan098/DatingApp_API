@@ -18,15 +18,16 @@ namespace APIGateWay.Extensions
             });
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IUserRepository,UserRepositroy>();
+           // services.AddScoped<IUserRepository,UserRepositroy>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySetting>(cofig.GetSection("CloudinarySetting"));
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
-            services.AddScoped<ILikesRepository, LikesRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
+          //  services.AddScoped<ILikesRepository, LikesRepository>();
+          //  services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddSignalR();
             services.AddSingleton<PresenceTracker>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }

@@ -5,6 +5,7 @@ using APIGateWay.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace APIGateWay.Data
 {
@@ -73,9 +74,9 @@ namespace APIGateWay.Data
         }
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
         {
-            var messages =await _dataContext.Messages
-                .Include(m => m.Sender).ThenInclude(s => s.Photos)
-                .Include(m => m.Recipient).ThenInclude(r => r.Photos)
+            var query = _dataContext.Messages
+                //.Include(m => m.Sender).ThenInclude(s => s.Photos)
+                //.Include(m => m.Recipient).ThenInclude(r => r.Photos)
                 .Where(
                     m => m.RecipientUsername == currentUserName &&
                     m.RecipientDeleted == false &&
@@ -84,11 +85,10 @@ namespace APIGateWay.Data
                     m.SenderDeleted == false &&
                     m.SenderUsername == currentUserName
                 )
-
                 .OrderBy(m => m.MessageSent)
-                .ToListAsync();
+                .AsQueryable();
 
-            var unreadMessages = messages
+            var unreadMessages = query
                 .Where(m => m.DateRead == null && m.RecipientUsername == currentUserName)
                 .ToList();
 
@@ -99,17 +99,18 @@ namespace APIGateWay.Data
                     message.DateRead = DateTime.UtcNow;
                 }
                 // _dataContext.Messages.UpdateRange(unreadMessages);
-                await _dataContext.SaveChangesAsync();
+               // await _dataContext.SaveChangesAsync();
             }
-            return _mapper.Map<IEnumerable<MessageDto>>(messages);
+            return await query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
         public void RemoveConnection(Connection connection)
         {
             _dataContext.Connections.Remove(connection);  
         }
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _dataContext.SaveChangesAsync() >0;
-        }
+        //public async Task<bool> SaveAllAsync()
+        //{
+        //    return await _dataContext.SaveChangesAsync() >0;
+        //}
     } 
 }

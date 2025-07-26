@@ -87,7 +87,9 @@ namespace APIGateWay.Controllers
             var user = await _unitOfWork.UserRepository.GetUserByPhotoId(photoId);
             if(!user.Photos.Any(x=>x.IsMain)) photo.IsMain = true;
             await _unitOfWork.Complete();
-            return Ok("Photo Approved");
+           // return Ok(new { message = " Photo Approved" });
+            return Ok();
+
         }
 
 
@@ -104,15 +106,18 @@ namespace APIGateWay.Controllers
                _photoService.DeletePhotoAsync(photo.PublicId);
                 if (result.Result == "ok")
                 {
+                      _unitOfWork.PhotoRepository.RemovePhoto(photo);
+                   // return BadRequest("Problem deleting photo from cloudinary");
                 }
             }
             else
             {
                 _unitOfWork.PhotoRepository.RemovePhoto(photo);
-                _unitOfWork.PhotoRepository.RemovePhoto(photo);
             }
             await _unitOfWork.Complete();
-            return Ok("Photo Rejected");
+           // return Ok();
+
+            return Ok();
         }
     }
 }

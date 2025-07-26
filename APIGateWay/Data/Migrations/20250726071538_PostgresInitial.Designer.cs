@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace APIGateWay.Migrations
+namespace APIGateWay.Data.Migrations
 {
     [DbContext(typeof(DataContextClass))]
-    [Migration("20250721070905_PhotoApprovalAdded")]
-    partial class PhotoApprovalAdded
+    [Migration("20250726071538_PostgresInitial")]
+    partial class PostgresInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

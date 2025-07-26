@@ -21,12 +21,6 @@ namespace APIGateWay.Data
 
         public async Task<MemberDto> GetMemberAsync(string username, bool isCurrentUser)
         {
-            //return await _context.Users
-            //     .Where(x => x.UserName == username)
-            //     .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-            //     .SingleOrDefaultAsync();
-            {
-            }
             var query = _context.Users
             .Where(x => x.UserName == username)
             .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
